@@ -1,0 +1,40 @@
+{
+  "name": "@chainkit/sdk",
+  "version": "0.1.0",
+  "description": "Official TypeScript/JavaScript SDK for the ChainKit non-custodial Bitcoin payments API.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node --test"
+  },
+  "keywords": [
+    "chainkit",
+    "bitcoin",
+    "payments",
+    "non-custodial",
+    "webhooks",
+    "crypto"
+  ],
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.6.0"
+  }
+}
