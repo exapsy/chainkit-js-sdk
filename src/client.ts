@@ -88,6 +88,21 @@ class InvoicesResource {
     );
     return res.invoice;
   }
+
+  /**
+   * Mark a paid/confirmed invoice as refunded, recording the on-chain
+   * txid of the refund you sent. Non-custodial: ChainKit moves no funds
+   * — you broadcast the refund from your own wallet, this records it.
+   * Throws `invoice_invalid_transition` for non-refundable statuses.
+   */
+  async refund(invoiceId: string, refundTxid: string, note?: string): Promise<Invoice> {
+    const res = await this.http.request<{ invoice: Invoice }>(
+      "POST",
+      `/invoices/${encodeURIComponent(invoiceId)}/refund`,
+      { body: { refund_txid: refundTxid, refund_note: note } },
+    );
+    return res.invoice;
+  }
 }
 
 class XpubsResource {

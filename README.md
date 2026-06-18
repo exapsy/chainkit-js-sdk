@@ -31,10 +31,13 @@ const xpub = await ck.xpubs.register({ label: "Cold wallet", xpub: "zpub6r..." }
 // 2. Prove you control it — paste any receive address your wallet shows.
 await ck.xpubs.verify(xpub.id, "bc1q...");
 
-// 3. Issue an invoice.
+// 3. Issue an invoice. Price in fiat — ChainKit locks a BTC rate at
+//    creation and freezes the sats amount (amount_fiat_cents is minor
+//    units, so 5000 = €50.00). Prefer this over amount_sats unless you
+//    track the rate yourself.
 const invoice = await ck.invoices.create({
   xpub_id: xpub.id,
-  amount_sats: 50_000,
+  amount_fiat_cents: 5_000,
   fiat_currency: "EUR",
   customer_email: "buyer@example.com",
 });
@@ -86,6 +89,7 @@ await ck.invoices.create(params);   // → Invoice
 await ck.invoices.get(id);          // → Invoice
 await ck.invoices.list({ status?, limit? }); // → Invoice[]
 await ck.invoices.cancel(id);       // → Invoice
+await ck.invoices.refund(id, refundTxid, note?); // → Invoice (record a refund you sent)
 
 // Wallets (xpubs)
 await ck.xpubs.register({ label, xpub, network? }); // → Xpub

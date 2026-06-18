@@ -23,7 +23,8 @@ export type WebhookEvent =
   | "invoice.paid"
   | "invoice.confirmed"
   | "invoice.expired"
-  | "invoice.cancelled";
+  | "invoice.cancelled"
+  | "invoice.refunded";
 
 export interface Invoice {
   id: string;
@@ -77,6 +78,13 @@ export interface Invoice {
   network: string;
   explorer_tx_base?: string;
 
+  /** On-chain txid of the refund you sent. Present once refunded. */
+  refund_txid?: string;
+  /** When the invoice was marked refunded. Present once refunded. */
+  refunded_at?: string;
+  /** Optional memo recorded with the refund. */
+  refund_note?: string;
+
   source: string;
   created_at: string;
   updated_at: string;
@@ -85,7 +93,20 @@ export interface Invoice {
 export interface CreateInvoiceParams {
   /** UUID of the registered xpub to derive the receive address from. */
   xpub_id: string;
+  /**
+   * Exact amount in satoshis — the advanced override. Supply this OR
+   * `amount_fiat_cents`, not both. When you price in sats, the merchant
+   * tracks the BTC↔fiat rate; ChainKit does not lock one.
+   */
   amount_sats?: number;
+  /**
+   * Fiat-priced amount in minor units (5000 = €50.00). The recommended
+   * path: ChainKit locks a BTC↔fiat rate at creation and freezes the
+   * sats amount, so you can price in your own currency. Requires
+   * `fiat_currency` to be one of USD/EUR/GBP/JPY/CAD. Mutually
+   * exclusive with `amount_sats`.
+   */
+  amount_fiat_cents?: number;
   fiat_currency?: string;
   rate_snapshot?: string;
   subtotal_fiat_cents?: number;
